@@ -7,7 +7,6 @@ export default {
     login (form_data) {
         Auth.login("/login", form_data)
             .then((response) => {
-                console.log(response.data.message);
                 if (response.data.success){
                     AuthStore().hasToken = response.data.token;
                     AuthStore().user =  response.data.user;
@@ -25,7 +24,7 @@ export default {
                 }
             })
             .catch((error) => {
-                console.log(error.response.data.message);
+                AuthStore().msg = error.response.data.message;
             });
     },
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -10,13 +11,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(AuthRequest $request)
     {
-        $request->validate([
-            'email'     => 'required|email',
-            'password'  => 'required'
-        ]);
-
         $user = User::where('email', $request->email)->first();
         if($user){
             $user['full_name'] = $user->full_name;
@@ -24,7 +20,7 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             $response = [
-                'message' => 'Email or Password is wrong'
+                'message' => 'Access denied. Wrong password.'
             ];
             return response()->json($response);
         }

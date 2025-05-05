@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ToDoRequest;
 use App\Models\ToDo;
 use Illuminate\Http\Request;
 
@@ -20,15 +21,8 @@ class TodoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ToDoRequest $request)
     {
-        $request->validate([
-            'task_name'     => 'required',
-            'description'   => 'required',
-        ], [
-            'task_name.required'    => 'The task title field is required.',
-        ]);
-
         ToDo::create([
             'name' => $request->task_name,
             'description' => $request->description
@@ -70,16 +64,9 @@ class TodoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update($id, Request $request)
+    public function update($id, ToDoRequest $request)
     {
-        $request->validate([
-            'task_name'     => 'required',
-            'description'   => 'required',
-        ], [
-            'task_name.required'    => 'The task title field is required.',
-        ]);
-
-        ToDo::where('id', $request->task_id)->update([
+        ToDo::where('id', $id)->update([
             'name' => $request->task_name,
             'description' => $request->description
         ]);

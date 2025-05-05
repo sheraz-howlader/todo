@@ -10,14 +10,25 @@ onMounted(() => {
     todo_store.todoLists();
 });
 
-// disappear login message
-watch(() => auth_store.msg, (newVal) => {
-    if (auth_store.msg) {
-        setTimeout(() => {
-            auth_store.msg = null
-        }, 3000)
+// disappear message
+watch(
+    () => [auth_store.msg, todo_store.msg?.info],
+    (newVal) => {
+        if (newVal[0] || newVal[1]) {
+            setTimeout(() => {
+                auth_store.msg = null;
+                todo_store.msg.info = null;
+            }, 3000);
+        }
     }
-})
+);
+
+const confirmDelete = (id) => {
+    const userConfirmed = window.confirm('Are you sure you want to delete this task?');
+    if (userConfirmed) {
+        todo_store.deleteTask(id);
+    }
+}
 
 </script>
 
@@ -70,7 +81,7 @@ watch(() => auth_store.msg, (newVal) => {
                                     ✏️
                                 </button>
                                 <button
-                                    @click.prevent="todo_store.deleteTask(todo.id)"
+                                    @click.prevent="confirmDelete(todo.id)"
                                     class="text-red-500 hover:text-red-700 transition text-sm"
                                     title="Delete"
                                 >
