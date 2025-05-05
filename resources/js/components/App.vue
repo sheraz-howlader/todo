@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <h1> this is vue component file </h1>
+    <router-view></router-view>
 </template>
 
 <style scoped>
