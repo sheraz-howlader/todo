@@ -28,4 +28,15 @@ export default {
                 console.log(error.response.data.message);
             });
     },
+
+    logout(){
+        Auth.logOut("/logout")
+            .then((response) => {
+                Cookies.remove("token");
+                window.location.reload();
+            })
+            .catch((error) => {
+                AuthStore().msg = error.response.data.message;
+            });
+    }
 };
