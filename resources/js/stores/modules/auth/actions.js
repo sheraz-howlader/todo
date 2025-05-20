@@ -1,5 +1,4 @@
 import Auth from "../../../services/Auth.js";
-import {AuthStore} from "@/stores/modules/auth";
 import Cookies from "js-cookie";
 import router from "../../../router/index.js";
 
@@ -8,8 +7,8 @@ export default {
         Auth.login("/login", form_data)
             .then((response) => {
                 if (response.data.success){
-                    AuthStore().hasToken = response.data.token;
-                    AuthStore().user =  response.data.user;
+                    this.hasToken = response.data.token;
+                    this.user =  response.data.user;
 
                     Cookies.set("token", response.data.token, {
                         sameSite: "lax",
@@ -17,14 +16,14 @@ export default {
                     });
 
                     router.push({name: 'todo'}).then(() => {
-                        AuthStore().msg = response.data.message;
+                        this.msg = response.data.message;
                     });
                 }else {
-                    AuthStore().msg = response.data.message;
+                    this.msg = response.data.message;
                 }
             })
             .catch((error) => {
-                AuthStore().msg = error.response.data.message;
+                this.msg = error.response.data.message;
             });
     },
 
@@ -32,10 +31,11 @@ export default {
         Auth.logOut("/logout")
             .then((response) => {
                 Cookies.remove("token");
-                window.location.reload();
+                this.hasToken = false;
+				router.push({ name: 'login' }).then(() => {});
             })
             .catch((error) => {
-                AuthStore().msg = error.response.data.message;
+                this.msg = error.response.data.message;
             });
     }
 };
